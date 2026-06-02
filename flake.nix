@@ -18,6 +18,7 @@
       };
     };
     opensslLib = pkgs.openssl.out;
+    sqliteLib = pkgs.sqlite.out;
     # ----------------------------
     # Sonarr package
     # ----------------------------
@@ -33,6 +34,7 @@
         pkgs.curl
         pkgs.sqlite
         opensslLib
+        sqliteLib
         pkgs.zlib
         pkgs.lttng-ust_2_12
         pkgs.stdenv.cc.cc.lib
@@ -94,7 +96,7 @@
             "PATH=/bin"
             "TZ=UTC"
             "LANG=en_US.UTF-8"
-            "LD_LIBRARY_PATH=${pkgs.icu}/lib:${opensslLib}/lib:${pkgs.zlib}/lib:${pkgs.lttng-ust_2_12}/lib:${pkgs.sqlite}/lib"
+            "LD_LIBRARY_PATH=${pkgs.icu}/lib:${opensslLib}/lib:${pkgs.zlib}/lib:${pkgs.lttng-ust_2_12}/lib:${sqliteLib}/lib"
           ];
         };
       };
