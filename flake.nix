@@ -1,14 +1,14 @@
 {
-  description = "minimalbase-ng + radarr service";
+  description = "minimalbase-ng + sonarr service";
   inputs = {
     nixpkgs.follows = "minimalbase/nixpkgs";
     minimalbase.url = "github:nonrootdocker/minimalbase-ng";
-    radarr-src = {
-      url = "https://radarr.servarr.com/v1/update/master/updatefile?os=linux&runtime=netcore&arch=x64";
+    sonarr-src = {
+      url = "https://services.sonarr.tv/v1/update/main/updatefile?os=linux&runtime=netcore&arch=x64";
       flake = false;
     };
   };
-  outputs = { self, nixpkgs, minimalbase, radarr-src }:
+  outputs = { self, nixpkgs, minimalbase, sonarr-src }:
   let
     system = "x86_64-linux";
     pkgs = import nixpkgs {
@@ -19,12 +19,12 @@
     };
     opensslLib = pkgs.openssl.out;
     # ----------------------------
-    # Radarr package
+    # Sonarr package
     # ----------------------------
-    radarr = pkgs.stdenv.mkDerivation {
-      pname = "radarr";
+    sonarr = pkgs.stdenv.mkDerivation {
+      pname = "sonarr";
       version = "latest";
-      src = radarr-src;
+      src = sonarr-src;
       nativeBuildInputs = [
         pkgs.autoPatchelfHook
       ];
@@ -50,17 +50,17 @@
     # ----------------------------
     passwdFile = pkgs.writeTextDir "etc/passwd" ''
       root:x:0:0:root:/root:/bin/sh
-      radarr:x:1000:1000:radarr:/data:/bin/sh
+      sonarr:x:1000:1000:sonarr:/data:/bin/sh
     '';
     # ----------------------------
     # ABI generator (Points directly to Nix Store)
     # ----------------------------
-    radarrAbi = pkgs.writeTextFile {
-      name = "radarr-abi.json";
+    sonarrAbi = pkgs.writeTextFile {
+      name = "sonarr-abi.json";
       text = builtins.toJSON {
         version = 2;
         process = {
-          exec = "${radarr}/app/Radarr/Radarr";
+          exec = "${sonarr}/app/Sonarr/Sonarr";
           args = [
             "-nobrowser"
             "-data=/data"
@@ -71,8 +71,8 @@
     };
   in {
     packages.${system} = {
-      default = self.packages.${system}.radarr-image;
-      radarr-image = pkgs.dockerTools.buildImage {
+      default = self.packages.${system}.sonarr-image;
+      sonarr-image = pkgs.dockerTools.buildImage {
         name = "minimalbase-ng";
         tag = "latest";
         fromImage = minimalbase.packages.${system}.base-image;
@@ -82,9 +82,9 @@
             pkgs.coreutils
             pkgs.tzdata
             pkgs.cacert
-            pkgs.ffmpeg-headless
-            radarr
-            radarrAbi
+            sonarr
+            sonarrAbi
+            passwdFile
           ];
         };
         config = {
