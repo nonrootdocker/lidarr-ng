@@ -1,8 +1,8 @@
 {
-  description = "minimalbase-ng + lidarr service";
+  description = "minimalbase + lidarr service";
   inputs = {
     nixpkgs.follows = "minimalbase/nixpkgs";
-    minimalbase.url = "github:nonrootdocker/minimalbase-ng";
+    minimalbase.url = "github:nonrootdocker/minimalbase";
     lidarr-src = {
       url = "https://lidarr.servarr.com/v1/update/master/updatefile?os=linux&runtime=netcore&arch=x64";
       flake = false;
@@ -75,7 +75,7 @@
     packages.${system} = {
       default = self.packages.${system}.lidarr-image;
       lidarr-image = pkgs.dockerTools.buildImage {
-        name = "minimalbase-ng";
+        name = "minimalbase";
         tag = "latest";
         fromImage = minimalbase.packages.${system}.base-image;
         copyToRoot = pkgs.buildEnv {
