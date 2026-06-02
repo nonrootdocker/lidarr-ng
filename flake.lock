@@ -1,16 +1,15 @@
 {
   "nodes": {
-    "jackett-src": {
+    "lidarr-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1780268406,
-        "narHash": "sha256-UN2rlFMht7T60srjx8KPB3zy3Qc1HxGUsQv/fzLhIVs=",
-        "type": "tarball",
-        "url": "https://github.com/Jackett/Jackett/releases/latest/download/Jackett.Binaries.LinuxAMDx64.tar.gz"
+        "narHash": "sha256-x2fTfygQeLPPNKrotSoFz4s09jozF564uMsfUfMWH5k=",
+        "type": "file",
+        "url": "https://lidarr.servarr.com/v1/update/master/updatefile?arch=x64&os=linux&runtime=netcore"
       },
       "original": {
-        "type": "tarball",
-        "url": "https://github.com/Jackett/Jackett/releases/latest/download/Jackett.Binaries.LinuxAMDx64.tar.gz"
+        "type": "file",
+        "url": "https://lidarr.servarr.com/v1/update/master/updatefile?arch=x64&os=linux&runtime=netcore"
       }
     },
     "minimalbase": {
@@ -48,7 +47,7 @@
     },
     "root": {
       "inputs": {
-        "jackett-src": "jackett-src",
+        "lidarr-src": "lidarr-src",
         "minimalbase": "minimalbase",
         "nixpkgs": [
           "minimalbase",
