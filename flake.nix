@@ -4,6 +4,7 @@
     nixpkgs.follows = "minimalbase/nixpkgs";
     minimalbase.url = "github:nonrootdocker/minimalbase";
     lidarr-src = {
+      type = "tarball";
       url = "https://lidarr.servarr.com/v1/update/master/updatefile?os=linux&runtime=netcore&arch=x64";
       flake = false;
     };
@@ -24,7 +25,7 @@
     # ----------------------------
     lidarr = pkgs.stdenv.mkDerivation {
       pname = "lidarr";
-      version = "latest";
+      version = "release";
       src = lidarr-src;
       nativeBuildInputs = [
         pkgs.autoPatchelfHook
@@ -39,14 +40,23 @@
         pkgs.stdenv.cc.cc.lib
         pkgs.libmediainfo
       ];
-      unpackPhase = ''
-        tar -xzf $src
-      '';
       installPhase = ''
-        mkdir -p $out/app
-        cp -r . $out/app/
+        mkdir -p $out/app/Lidarr
+        cp -r . $out/app/Lidarr/
       '';
     };
+    # ----------------------------
+    # Lidarr version: the real product version is embedded in Core.dll as
+    # the assembly reference "Lidarr.Common, Version=N.N.N.N" (consistent
+    # across Servarr apps). Exposed as the `version` output for CI tagging.
+    # ----------------------------
+    lidarrVersion = pkgs.runCommand "lidarr-version" {
+      nativeBuildInputs = [ pkgs.binutils ];
+    } ''
+      strings ${lidarr}/app/Lidarr/Lidarr.Core.dll \
+        | grep -oE 'Lidarr\.Common, Version=[0-9.]+' \
+        | head -n1 | sed 's/.*Version=//' | tr -d '\n' > $out
+    '';
     # ----------------------------
     # User database configuration (/etc/passwd)
     # ----------------------------
@@ -74,8 +84,9 @@
   in {
     packages.${system} = {
       default = self.packages.${system}.lidarr-image;
+      version = lidarrVersion;
       lidarr-image = pkgs.dockerTools.buildImage {
-        name = "minimalbase";
+        name = "lidarr";
         tag = "latest";
         fromImage = minimalbase.packages.${system}.base-image;
         copyToRoot = pkgs.buildEnv {
