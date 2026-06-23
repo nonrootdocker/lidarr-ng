@@ -3,13 +3,14 @@
     "lidarr-src": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-x2fTfygQeLPPNKrotSoFz4s09jozF564uMsfUfMWH5k=",
-        "type": "file",
-        "url": "https://lidarr.servarr.com/v1/update/master/updatefile?arch=x64&os=linux&runtime=netcore"
+        "lastModified": 1763163964,
+        "narHash": "sha256-IxTUGwx0xH9GgBUwEqjn0bngvDAdahQAsDg5H4qy3ck=",
+        "type": "tarball",
+        "url": "https://lidarr.servarr.com/v1/update/master/updatefile?os=linux&runtime=netcore&arch=x64"
       },
       "original": {
-        "type": "file",
-        "url": "https://lidarr.servarr.com/v1/update/master/updatefile?arch=x64&os=linux&runtime=netcore"
+        "type": "tarball",
+        "url": "https://lidarr.servarr.com/v1/update/master/updatefile?os=linux&runtime=netcore&arch=x64"
       }
     },
     "minimalbase": {
