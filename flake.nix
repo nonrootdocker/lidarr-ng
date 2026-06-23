@@ -46,16 +46,15 @@
       '';
     };
     # ----------------------------
-    # Lidarr version: the real product version is embedded in Core.dll as
-    # the assembly reference "Lidarr.Common, Version=N.N.N.N" (consistent
-    # across Servarr apps). Exposed as the `version` output for CI tagging.
+    # Lidarr version: read the product version from the assembly manifest of
+    # Lidarr.Core.dll via monodis (the proper tool, robust vs string scraping).
+    # Exposed as the `version` output for CI tagging.
     # ----------------------------
     lidarrVersion = pkgs.runCommand "lidarr-version" {
-      nativeBuildInputs = [ pkgs.binutils ];
+      nativeBuildInputs = [ pkgs.mono ];
     } ''
-      strings ${lidarr}/app/Lidarr/Lidarr.Core.dll \
-        | grep -oE 'Lidarr\.Common, Version=[0-9.]+' \
-        | head -n1 | sed 's/.*Version=//' | tr -d '\n' > $out
+      monodis --assembly ${lidarr}/app/Lidarr/Lidarr.Core.dll \
+        | awk '$1 == "Version:" { print $2; exit }' | tr -d '\n' > $out
     '';
     # ----------------------------
     # User database configuration (/etc/passwd)
